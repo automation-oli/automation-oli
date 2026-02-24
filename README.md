@@ -4,6 +4,4 @@
 
 ![GitHub Stats](images/stats.svg)
 
-![GitHub Chart](https://ghchart.rshah.org/automation-oli)
-
 ![activity graph](https://github-readme-activity-graph.vercel.app/graph?username=automation-oli&theme=github-dark&hide_border=true&area=true)
