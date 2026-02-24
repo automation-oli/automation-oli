@@ -1,0 +1,31 @@
+name: Update GitHub Stats
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches: [main]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Stats Card
+        run: |
+          mkdir -p images
+          curl -o images/stats.svg "https://github-readme-stats.vercel.app/api?username=automation-oli&show_icons=true&theme=dark&hide_border=true&hide_title=true&count_private=true"
+          # Retry with backup instance if failed
+          if [ ! -s images/stats.svg ] || grep -q "Error" images/stats.svg 2>/dev/null; then
+            curl -o images/stats.svg "https://github-readme-stats-git-master-anuraghazras-projects.vercel.app/api?username=automation-oli&show_icons=true&theme=dark&hide_border=true&hide_title=true&count_private=true"
+          fi
+
+      - name: Commit & Push
+        run: |
+          git config user.name "automation-oli"
+          git config user.email "automation-oli@users.noreply.github.com"
+          git add images/
+          git diff --staged --quiet || (git commit -m "chore: update stats" && git push)
